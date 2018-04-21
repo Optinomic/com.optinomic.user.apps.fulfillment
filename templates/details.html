@@ -1,0 +1,41 @@
+<div layout="row" layout-gt-xs="row" layout-align="space-between center">
+    <h3 class="md-headline">Details |  {{d.app.app_selected.name}}</h3>
+    <md-button ng-click="clearPatientDetails()" class="md-primary">Schliessen</md-button>
+</div>
+<div md-margin md-padding>
+    <h3 class="md-title">{{d.app.details.patient.data.last_name}} {{d.app.details.patient.data.first_name}} ({{d.app.details.patient.data.birthdate | date}})</h3>
+    <div ng-repeat="stay in d.app.details.patient.fulfillment.data" ng-init="stay.show_stay = false">
+        <div class="grid-border-top" layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between center">
+            <div flex layout="row" layout-xs="row" layout-gt-xs="row" layout-align="center center">
+                <p flex="10" class="md-title" style="color:#4CAF50">
+                    {{stay.length}}
+                </p>
+                <p flex class="md-subhead">{{stay[0].s_start | date}} - <span ng-if="stay[0].s_stop !== ''">{{stay[0].s_stop | date}}</span> <span ng-if="stay[0].s_stop === ''">Unbekannt</span> <small style="color:#9E9E9E"> ID:{{stay[0].sr_stay_id}}</small></p>
+            </div>
+            <md-button ng-if="!stay.show_stay" class="md-accent" ng-click="stay.show_stay = true">Anzeigen</md-button>
+            <md-button ng-if="stay.show_stay" class="md-accent" ng-click="stay.show_stay = false">Schliessen</md-button>
+        </div>
+        <div ng-if="stay.show_stay" style="margin-left:68px;">
+            <div ng-repeat="resp in stay" ng-init="resp.show_resp = false">
+                <md-divider></md-divider>
+                <div layout="row" layout-xs="row" layout-gt-xs="row" layout-align="center center" layout-margin>
+                    <p flex="20" class="md-body-2" style="color:#4CAF50">
+                        {{resp.sr_filled | date}}, {{resp.sr_filled_time}} <small style="color:#9E9E9E">{{resp.mins_created_to_filled}}</small>
+                    </p>
+                    <div flex layout="row" layout-xs="row" layout-gt-xs="row" layout-align="space-between center">
+                        <p class="md-body-1">{{resp.e_survey_name}}
+                            <small style="color:#9E9E9E">{{resp.e_description}}</small>
+                        </p>
+                        <md-button ng-if="!resp.show_resp" class="md-secondary" ng-click="resp.show_resp = true">Details</md-button>
+                        <md-button ng-if="resp.show_resp" class="md-secondary" ng-click="resp.show_resp = false">Schliessen</md-button>
+                    </div>
+                </div>
+                <div ng-if="resp.show_resp">
+                    <pre>
+                    {{resp.response | json}}
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
